@@ -5,3 +5,6 @@
 @Author :yange2615@gmail.com
 @File   :__init__.py
 """
+from .http import Http
+
+__all__ = ['Http']
