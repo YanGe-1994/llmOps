@@ -5,17 +5,22 @@
 @Author :yange2615@gmail.com
 @File   :app_handler
 """
+import os
+
 from flask import request
 from openai import OpenAI
-import dotenv
-import os
-# 将env加载到环境变量中
-dotenv.load_dotenv()
+
+from internal.schema.app_schema import CompletionReq
+
 
 class AppHandler():
     """应用控制器"""
     def completion(self):
         # 1. 提取用户输入
+        req = CompletionReq()
+        if not req.validate():
+            return req.errors
+
         query = request.json.get('query')
         # 2. 构建openid客户端
         client = OpenAI(

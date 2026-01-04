@@ -7,9 +7,14 @@
 """
 from flask import Flask
 from internal.router import Router
+from  config import Config
+app = Flask(__name__)
+app.config.from_object(Config)
 
 class Http(Flask):
-    def __init__(self,*args,router:Router,**kwargs):
+    def __init__(self,*args,conf:Config,router:Router,**kwargs):
         super().__init__(*args,**kwargs)
         # 注册应用路由
         router.register_route(self)
+
+        self.config.from_object(conf)

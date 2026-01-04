@@ -5,3 +5,6 @@
 @Author :yange2615@gmail.com
 @File   :__init__.py
 """
+from .app_schema import CompletionReq
+
+__all__ = ["CompletionReq"]
