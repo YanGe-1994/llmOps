@@ -9,9 +9,8 @@ import os
 
 from flask import request
 from openai import OpenAI
-
 from internal.schema.app_schema import CompletionReq
-
+from pkg.response import  success_json
 
 class AppHandler():
     """应用控制器"""
@@ -31,7 +30,8 @@ class AppHandler():
             model="qwen-plus",
             messages=[{'role': 'user', 'content': query}]
         )
-        return completion.choices[0].message.content
+        content = completion.choices[0].message.content
+        return success_json({'content': content})
 
     def ping(self):
         return {"ping": "pong"}
