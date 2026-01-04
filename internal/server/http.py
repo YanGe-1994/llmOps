@@ -7,9 +7,8 @@
 """
 from flask import Flask
 from internal.router import Router
-from  config import Config
+from config import Config
 app = Flask(__name__)
-app.config.from_object(Config)
 
 class Http(Flask):
     def __init__(self,*args,conf:Config,router:Router,**kwargs):
