@@ -7,17 +7,20 @@
 """
 from flask import request
 from openai import OpenAI
+import dotenv
+import os
+# 将env加载到环境变量中
+dotenv.load_dotenv()
+
 class AppHandler():
     """应用控制器"""
     def completion(self):
         # 1. 提取用户输入
         query = request.json.get('query')
-        print('query',query)
         # 2. 构建openid客户端
         client = OpenAI(
-            api_key="sk-2a8e9040e53e4cf1ba8b0391e3ef0786",
-            # 以下是北京地域base_url，如果使用新加坡地域的模型，需要将base_url替换为：https://dashscope-intl.aliyuncs.com/compatible-mode/v1
-            base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+            api_key=os.environ.get("OPEN_API_KEY"),
+            base_url=os.environ.get("BASE_URL"),
         )
         completion = client.chat.completions.create(
             model="qwen-plus",
