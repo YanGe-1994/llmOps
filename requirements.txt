@@ -5,3 +5,5 @@ openai==2.14.0
 python-dotenv==1.2.1
 WTForms==3.2.1
 pytest
+flask-sqlalchemy
+sqlalchemy

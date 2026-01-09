@@ -13,15 +13,25 @@ from config import Config
 
 from internal.exception import CustomException
 from pkg.response import Response, json, HttpCode
+
+from flask_sqlalchemy import SQLAlchemy
+
+from internal.model import App
 app = Flask(__name__)
 
 class Http(Flask):
-    def __init__(self,*args,conf:Config,router:Router,**kwargs):
+    def __init__(self,*args,conf:Config,router:Router,db:SQLAlchemy,**kwargs):
         # 调用父类构造函数初始化
         super().__init__(*args,**kwargs)
 
         # 初始化应用配置
         self.config.from_object(conf)
+
+        # 初始化flask扩展
+        db.init_app(self)
+        with self.app_context():
+            _ =App()
+            db.create_all()
 
         # 绑定异常错误处理
         self.register_error_handler(Exception,self._register_error_handler)

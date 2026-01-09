@@ -9,13 +9,19 @@ import os
 
 from flask import request
 from openai import OpenAI
+from injector import inject
+from dataclasses import dataclass
 
 from internal.schema.app_schema import CompletionReq
-from pkg.response import  success_json,validate_error_json
-from internal.exception import  NotFoundException, FailException
+from internal.service import AppService
+from pkg.response import success_json, validate_error_json, success_message
+from internal.exception import FailException
 
+@inject
+@dataclass
 class AppHandler:
     """应用控制器"""
+    app_service: AppService
     def completion(self):
         # 1. 提取用户输入
         req = CompletionReq()
@@ -38,3 +44,7 @@ class AppHandler:
     def ping(self):
         # return {"ping": "pong"}
         raise FailException('数据未找到')
+
+    def create_app(self):
+        app = self.app_service.create_app()
+        return success_message(f"应用成功创建{app.id}")
