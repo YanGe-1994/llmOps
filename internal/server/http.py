@@ -8,19 +8,29 @@
 import os
 
 from flask import Flask
+from flask_migrate import Migrate
+
 from internal.router import Router
 from config import Config
 
 from internal.exception import CustomException
 from pkg.response import Response, json, HttpCode
 
-from flask_sqlalchemy import SQLAlchemy
+from pkg.sqlalchemy import SQLAlchemy
 
 from internal.model import App
 app = Flask(__name__)
 
 class Http(Flask):
-    def __init__(self,*args,conf:Config,router:Router,db:SQLAlchemy,**kwargs):
+    def __init__(
+            self,
+            *args,
+            conf:Config,
+            router:Router,
+            db:SQLAlchemy,
+            migration:Migrate,
+            **kwargs
+    ):
         # 调用父类构造函数初始化
         super().__init__(*args,**kwargs)
 
@@ -29,6 +39,8 @@ class Http(Flask):
 
         # 初始化flask扩展
         db.init_app(self)
+        # 初始化migration扩展
+        migration.init_app(self,db,'internal/migration')
         with self.app_context():
             _ =App()
             db.create_all()

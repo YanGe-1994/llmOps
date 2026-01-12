@@ -8,7 +8,7 @@
 
 from injector import inject
 from dataclasses import dataclass
-from flask_sqlalchemy import SQLAlchemy
+from pkg.sqlalchemy import SQLAlchemy
 from internal.model import App
 import uuid
 
@@ -18,8 +18,22 @@ class AppService:
     """应用服务逻辑"""
     db: SQLAlchemy
     def create_app(self) -> App:
-        app = App(name="测试机器人",account_id=uuid.uuid4(), icon="", description="测试聊天机器人")
-        self.db.session.add(app)
-        self.db.session.commit()
+        with self.db.auto_commit():
+            app = App(name="测试机器人",account_id=uuid.uuid4(), icon="", description="测试聊天机器人")
+            self.db.session.add(app)
         return app
 
+    def get_app(self,id: uuid.UUID) -> App:
+        return self.db.session.query(App).get(id)
+
+    def update_app(self,id: uuid.UUID) -> App:
+        with self.db.auto_commit():
+            app = self.get_app(id)
+            app.name = '修改的聊天机器人'
+        return app
+
+    def delete_app(self,id: uuid.UUID) -> App:
+        with self.db.auto_commit():
+            app = self.get_app(id)
+            self.db.session.delete(app)
+        return app

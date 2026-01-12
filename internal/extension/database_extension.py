@@ -5,6 +5,6 @@
 @Author :yange2615@gmail.com
 @File   :database_extension
 """
-from flask_sqlalchemy import SQLAlchemy
+from pkg.sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 

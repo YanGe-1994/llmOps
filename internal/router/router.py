@@ -24,5 +24,8 @@ class Router:
         bp.add_url_rule('ping', view_func=self.app_handler.ping)
         bp.add_url_rule('app/completion',methods=["post"], view_func=self.app_handler.completion)
         bp.add_url_rule('app/create',methods=["post"], view_func=self.app_handler.create_app)
+        bp.add_url_rule('app/getApp/<uuid:id>',methods=["get"], view_func=self.app_handler.get_app)
+        bp.add_url_rule('app/update/<uuid:id>',methods=["post"], view_func=self.app_handler.update_app)
+        bp.add_url_rule('app/delete/<uuid:id>', methods=["post"], view_func=self.app_handler.delete_app)
         # 3.在应用上注册蓝图
         app.register_blueprint(bp)
