@@ -3,7 +3,7 @@
 """
 @Time   :2026/1/20 16:13
 @Author :yange2615@gmail.com
-@File   :stady
+@File   :study
 """
 import os
 from typing import Any
