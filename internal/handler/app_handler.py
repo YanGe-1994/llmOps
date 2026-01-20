@@ -13,8 +13,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from injector import inject
 from dataclasses import dataclass
 
-from openai import responses
-
 from internal.schema.app_schema import CompletionReq
 from internal.service import AppService
 from pkg.response import success_json, validate_error_json, success_message
