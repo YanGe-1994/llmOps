@@ -69,3 +69,5 @@ response = chain.invoke({
     "query": "讲一个冷笑话",
     "format_instructions": parser.get_format_instructions()
 })
+
+print(response.text)
