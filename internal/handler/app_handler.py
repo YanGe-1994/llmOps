@@ -9,6 +9,7 @@ import os
 import uuid
 
 from flask import request
+from langchain_core.callbacks import StdOutCallbackHandler
 from langchain_core.prompts import ChatPromptTemplate
 from injector import inject
 from dataclasses import dataclass
@@ -19,7 +20,7 @@ from pkg.response import success_json, validate_error_json, success_message
 from internal.exception import FailException
 
 from pydantic import BaseModel,Field
-from langchain_community.llms import Tongyi
+from langchain_qwq import ChatQwen
 from langchain_core.output_parsers import JsonOutputParser
 
 class Joke(BaseModel):
@@ -46,27 +47,29 @@ class AppHandler:
         """)
 
         # 构建通义千问llm客户端
-        llm = Tongyi(
+        llm = ChatQwen(
             model="qwen-plus",
-            temperature=0.2,
-            responses_format=Joke,
+            max_tokens=3_000,
+            timeout=None,
+            max_retries=2,
+            api_key=os.environ.get('DASHSCOPE_API_KEY'),
+            base_url=os.environ.get('DASHSCOPE_BASE_URL'),
+            callbacks=[StdOutCallbackHandler()]
         )
 
         # 构建输出解析器
-        # parser = StrOutputParser()
-
         parser = JsonOutputParser(pydantic_object=Joke)
         # 构建链式调用
-        chain = prompt | llm | parser
+        chain = prompt | llm
 
         # 执行链式调用
-        content = chain.invoke({
+        response = chain.invoke({
             "query": query,
             "format_instructions": parser.get_format_instructions()
         })
-
+        print('content', response.content)
         # 返回结果
-        return success_json({'content': content})
+        return success_json({'content': response.content})
 
     def ping(self):
         # return {"ping": "pong"}
