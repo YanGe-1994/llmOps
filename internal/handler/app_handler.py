@@ -24,9 +24,7 @@ from langchain_qwq import ChatQwen
 from langchain_core.output_parsers import JsonOutputParser
 
 class Joke(BaseModel):
-    joke: str = Field(description="回答用户的冷笑话")
-    punchline: str= Field(description="冷笑话的笑点")
-
+    talk: str = Field(description="回答用户关于编程方面的问题")
 @inject
 @dataclass
 class AppHandler:
@@ -41,7 +39,7 @@ class AppHandler:
         query = request.json.get('query')
         # 生成提示词
         prompt = ChatPromptTemplate.from_template("""
-            你是一个超级搞笑的脱口秀演员，请认真回答用户的问题。
+            你是一个有20年开发经验的程序员，请认真回答用户的问题。
             {format_instructions}
             用户问题: {query}
         """)
