@@ -8,6 +8,7 @@
 import os
 import uuid
 
+from dashscope import api_key
 from flask import request
 from langchain_core.callbacks import StdOutCallbackHandler
 from langchain_core.prompts import ChatPromptTemplate
@@ -22,6 +23,7 @@ from internal.exception import FailException
 from pydantic import BaseModel,Field
 from langchain_qwq import ChatQwen
 from langchain_core.output_parsers import JsonOutputParser
+from langchain.agents import create_agent
 
 class Joke(BaseModel):
     talk: str = Field(description="回答用户关于编程方面的问题")
@@ -45,14 +47,19 @@ class AppHandler:
         """)
 
         # 构建通义千问llm客户端
-        llm = ChatQwen(
-            model="qwen-plus",
-            max_tokens=3_000,
-            timeout=None,
-            max_retries=2,
-            api_key=os.environ.get('DASHSCOPE_API_KEY'),
-            base_url=os.environ.get('DASHSCOPE_BASE_URL'),
-            callbacks=[StdOutCallbackHandler()]
+        # llm = ChatQwen(
+        #     model="qwen-plus",
+        #     max_tokens=3_000,
+        #     timeout=None,
+        #     max_retries=2,
+        #     api_key=os.environ.get('DASHSCOPE_API_KEY'),
+        #     base_url=os.environ.get('DASHSCOPE_BASE_URL'),
+        #     callbacks=[StdOutCallbackHandler()]
+        # )
+        llm = create_agent(
+            model="claude-sonnet-4-6",
+            api_key="ailab_W/h3qmrgTdsks8ngpKr++gZ4h49d7KxQDm/6ewJQeM1R9qyvCD8Gi4DgZnTPB6UcUNCtsTw4JUgUoAOAVxzWbvgU1qog1c0JqY68zu1wDZFwTqEDEsdobFQ=",
+            base_url="https://lab.iwhalecloud.com/gpt-proxy/v1",
         )
 
         # 构建输出解析器
